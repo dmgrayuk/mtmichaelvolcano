@@ -1,0 +1,34 @@
+>>> # ---------------------------------------------------------------------------
+... # Landsat7_Automation_Bx script.py
+...
+... # Import arcpy module
+... import arcpy
+... 
+... 
+... # Local variables:
+... Landsat_Bx_Layer = "Landsat_Bx_Layer_Name"
+... # Landsat file for the SWIR layer
+... MtMichaelPolygon = "MtMichaelPolygon_Name"
+... # Polygon shapefile to define processing extent
+... Clipped_Bx_Layer = "C:\\Users\\Danielle\\Documents\\MtMichael.gdb\\Clipped_Bx_Layer_Name"
+... # Layer name for Landsat Bx layer once clipped to shapefile extent
+... Unsaturated_Bx_Layer = "C:\\Users\\Danielle\\Documents\\MtMichael.gdb\\Unsaturated_Bx_Layer_Name"
+... # Layer name for Landsat Bx layer with unsaturated pixels removed
+... TOArad_Bx_Layer = "C:\\Users\\Danielle\\Documents\\MtMichael.gdb\\TOArad_Bx_Name"
+... # Layer name for Landsat Bx layer when converted to top of atmosphere radiance
+... 
+... # Process: Clip
+... # this clips all layers to extent of polygon shapefile
+... arcpy.Clip_management(Landsat_Bx_Layer, "Clipping_coordinate_extent", Clipped_Bx_Layer, MtMichaelPolygon, "256", "NONE", "MAINTAIN_EXTENT")
+... # last 3 variables are default values
+... 
+... # Process: Set Null
+... # this sets any saturated cells to null
+... arcpy.gp.SetNull_sa(Clipped_Bx_Layer, Clipped_Bx_Layer, Unsaturated_Bx_Layer, "VALUE = 255")
+... # "VALUE = 255" relates to the saturated pixel value as per metadata file
+... 
+... # Process: Raster Calculator
+... # this converts digital number (DN) to top of atmosphere radiance
+... arcpy.gp.RasterCalculator_sa("RADIANCE_MULT_BAND_x * \"%Unsaturated_Bx_Layer%\" + (RADIANCE_ADD_BAND_x)", TOArad_Bx_Layer)
+... 
+... 
