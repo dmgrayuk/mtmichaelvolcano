@@ -30,5 +30,5 @@
 ... # Process: Raster Calculator
 ... # this converts digital number (DN) to top of atmosphere radiance
 ... arcpy.gp.RasterCalculator_sa("RADIANCE_MULT_BAND_x * \"%Unsaturated_Bx_Layer%\" + (RADIANCE_ADD_BAND_x)", TOArad_Bx_Layer)
-... 
+... # all parameters can be found in the metadata file
 ... 
