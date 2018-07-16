@@ -1,0 +1,34 @@
+... # ---------------------------------------------------------------------------
+... # Sentinel2_Automation_Bx script.py
+... 
+... # Import arcpy module
+... import arcpy
+... 
+... 
+... # Local variables:
+... Sentinel_Bx_Layer = "Sentinel_Bx_Layer_Name"
+... # Sentinel file for the SWIR layer
+... MtMichaelPolygon = "MtMichaelPolygon"
+... # Polygon shapefile to define processing extent
+... Clipped_Bx_Layer = "C:\\Users\\Danielle\\Documents\\MtMichael.gdb\\Clipped_Bx_Layer"
+... # Layer name for Sentinel Bx layer once clipped to shapefile extent
+... Unsaturated_Bx_Layer = "C:\\Users\\Danielle\\Documents\\MtMichael.gdb\\Unsaturated_Bx_Layer"
+... # Layer name for Sentinel Bx layer with unsaturated pixels removed
+... TOArad_Bx_Layer = "C:\\Users\\Danielle\\Documents\\UCL dissertation\\Mt Michael Data\\MtMichael.gdb\\TOArad_Bx_Layer"
+... # Layer name for Sentinel Bx layer when converted to top of atmosphere radiance
+... 
+... # Process: Clip
+... # this clips all layers to extent of polygon shapefile
+... arcpy.Clip_management(Sentinel_Bx_Layer, "xlipping_coordinate_extent", Clipped_Bx_Layer, MtMichaelPolygon, "65536", "NONE", "MAINTAIN_EXTENT")
+... # last 3 variables are default values
+... 
+... # Process: Set Null
+... # this sets any saturated cells to null
+... arcpy.gp.SetNull_sa(Clipped_Bx_Layer, Clipped_Bx_Layer, Unsaturated_Bx_Layer, "VALUE = 65535")
+... # "VALUE = 255" relates to the saturated pixel value as per metadata file
+... 
+... # Process: Raster Calculator
+... # this converts digital number (DN) to top of atmosphere radiance
+... arcpy.gp.RasterCalculator_sa("((\"%Unsaturated_Bx_Layer%\" * cos(incidence_angle) * solar_irradiance) / (math.pi * (1/U))) / 10000", TOArad_Bx_Layer)
+... # "U" is the quantification value. All parameters can be found in the metadata file.
+... 
