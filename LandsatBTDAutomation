@@ -1,0 +1,29 @@
+... # ---------------------------------------------------------------------------
+... # Landsat8_BTD_Automation script.py
+... 
+... # Import arcpy module
+... import arcpy
+... 
+... 
+... # Local variables:
+... Landsat_TIR1_Layer = "Landsat_TIR1_Layer"
+... # name of first Landsat thermal infrared band
+... TOARadTIR1_Layer = "C:\\Users\\Danielle\\Documents\\ArcGIS\\Default.gdb\\TOARadTIR1_Layer"
+... # name of layer once converted to radiance
+... BrightnessTempTIR1 = "C:\\Users\\Danielle\\Documents\\ArcGIS\\Default.gdb\\BrightnessTempTIR1"
+... # name of layer once converted to brightness temperature for first thermal band
+... BrightnessTempTIR2 = "C:\\Users\\Danielle\\Documents\\ArcGIS\\Default.gdb\\BrightnessTempTIR2"
+... # name of layer once converted to brightness temperature for second thermal band
+... BrightnessTempDiff = "C:\\Users\\Danielle\\Documents\\ArcGIS\\Default.gdb\\BrightnessTempDiff"
+... # name of layer once second thermal band subtracted from first thermal band (brightness temoerature difference)
+... 
+... # Process: Raster Calculator
+... arcpy.gp.RasterCalculator_sa("0.00033420 * \"%Landsat_TIR1_Layer%\" + 0.1", TOARadTIR1_Layer)
+... 
+... # Process: Raster Calculator (2)
+... arcpy.gp.RasterCalculator_sa("1321.0789 / (Ln(774.8853/\"%TOARadTIR1_Layer%\" + 1))", BrightnessTempTIR1)
+... 
+... # Process: Raster Calculator (3)
+... arcpy.gp.RasterCalculator_sa("\"%BrightnessTempTIR1%\" - \"%BrightnessTempTIR2%\"", BrightnessTempDiff)
+... 
+... 
