@@ -1,0 +1,34 @@
+#code taken verbatim from https://stackoverflow.com/questions/40580025/np-array-intersection-attributeerror-module-object-has-no-attribute-piece
+#https://stackoverflow.com/questions/8094374/python-matplotlib-find-intersection-of-lineplots
+
+import scipy.interpolate
+import scipy.optimize as optimize
+import numpy as np
+
+# changed arrays for each date calculated
+x1 = np.array([1150,1200,1250,1300])
+y1 = np.array([0.002388,0.00193,0.00158,0.00131])
+x2 = np.array([1150,1200,1250,1300])
+y2 = np.array([0.002202,0.001879,0.00162,0.00141])   
+
+p1=scipy.interpolate.BPoly.from_derivatives(x1,y1[:,np.newaxis])
+p2=scipy.interpolate.BPoly.from_derivatives(x2,y2[:,np.newaxis])
+
+def pdiff(x):
+    return p1(x)-p2(x)
+
+xs=np.r_[x1,x2]
+xs.sort()
+x_min=xs.min()
+x_max=xs.max()
+x_mid=xs[:-1]+np.diff(xs)/2
+roots=set()
+for val in x_mid:
+    root,infodict,ier,mesg = optimize.fsolve(pdiff,val,full_output=True)
+    # ier==1 indicates a root has been found
+    if ier==1 and x_min<root<x_max:
+        roots.add(root[0])
+roots=list(roots)        
+print(np.column_stack((roots,p1(roots),p2(roots))))
+
+# returns intersect (temperature of molten lava and fraction of pixel it occupies
