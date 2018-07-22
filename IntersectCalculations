@@ -1,6 +1,11 @@
-#code taken verbatim from https://stackoverflow.com/questions/40580025/np-array-intersection-attributeerror-module-object-has-no-attribute-piece
-#https://stackoverflow.com/questions/8094374/python-matplotlib-find-intersection-of-lineplots
-
+#code taken verbatim from https://stackoverflow.com/questions/8094374/python-matplotlib-find-intersection-of-lineplots 
+#except where otherwise stated
+----------------------------------------------------------------------------------------------------------------
+#   Title: Python - matplotlib: find intersection of lineplots
+#   Author: Unutbu (StackOverflow)
+#   Date: 2011
+#   Availability: https://stackoverflow.com/questions/8094374/python-matplotlib-find-intersection-of-lineplots
+----------------------------------------------------------------------------------------------------------------
 import scipy.interpolate
 import scipy.optimize as optimize
 import numpy as np
@@ -11,6 +16,7 @@ y1 = np.array([0.002388,0.00193,0.00158,0.00131])
 x2 = np.array([1150,1200,1250,1300])
 y2 = np.array([0.002202,0.001879,0.00162,0.00141])   
 
+# changed type of interpolation from piecewisepolynomial as this has been removed in scipy since code was written in 2011
 p1=scipy.interpolate.BPoly.from_derivatives(x1,y1[:,np.newaxis])
 p2=scipy.interpolate.BPoly.from_derivatives(x2,y2[:,np.newaxis])
 
